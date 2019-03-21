@@ -48,14 +48,27 @@ void COrientalMotor::read()
 
   int result = 0;
 
-  modbus_read_registers(m_ctx, PRESENT_POSITION_UPPER, 2, buffer);
-  std::cout << "Position: " << buffer[0] << " [Upper], " << buffer[1] << " [Lower] (DEC)" << std::endl;
-  std::cout << "          " << std::hex << buffer[0] << " [Upper], " << std::hex << buffer[1] << " [Lower] (HEX)" << std::endl;
+  result = modbus_read_registers(m_ctx, PRESENT_POSITION_UPPER, 2, buffer);
+  if (result == -1)
+  {
+    std::cout << "[OrientalMotor] ID: " << m_ID << ", failed to read position registers " << std::endl;
+    return;
+  }
+
+  m_present_position = (double) ((buffer[0] << 16) | buffer[1]) /100;
+
+  #ifdef _DEBUG
+    std::cout << "Position: " << buffer[0] << " [Upper], " << buffer[1] << " [Lower] (DEC)" << std::endl;
+    std::cout << "          " << std::hex << buffer[0] << " [Upper], " << std::hex << buffer[1] << " [Lower] (HEX)" << std::endl;
+  #endif
 
   modbus_read_registers(m_ctx, PRESENT_VELOCITY_UPPER, 2, buffer);
-  std::cout << "Velocity: " << buffer[0] << " [Upper], " << buffer[1] << " [Lower] (DEC)" << std::endl;
-  std::cout << "          " << std::hex << buffer[0] << " [Upper], " << std::hex << buffer[1] << " [Lower] (HEX)" << std::endl;
+  m_present_velocity = (double) ((buffer[0] << 16) | buffer[1]) /100;
 
+  #ifdef _DEBUG
+    std::cout << "Velocity: " << buffer[0] << " [Upper], " << buffer[1] << " [Lower] (DEC)" << std::endl;
+    std::cout << "          " << std::hex << buffer[0] << " [Upper], " << std::hex << buffer[1] << " [Lower] (HEX)" << std::endl;
+  #endif
 }
 
 double* COrientalMotor::GetGoalPositionPtr()
