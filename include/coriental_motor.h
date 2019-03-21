@@ -44,7 +44,7 @@ private:
   bool m_valid;
   
 public:
-  COrientalMotor(std::string, uint16_t, char, uint8_t, uint8_t, uint8_t id);
+  COrientalMotor(std::string, unsigned int, char, unsigned short, unsigned short, unsigned short id);
   //int set_goal_velocity()
 
   int move_absolute_position();

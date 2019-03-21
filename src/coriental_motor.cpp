@@ -1,13 +1,15 @@
 #include "coriental_motor.h"
 #include <iostream>
 
-COrientalMotor::COrientalMotor(std::string device_name, uint16_t baudrate, char parity, uint8_t data_bit, uint8_t stop_bit, uint8_t id):
+COrientalMotor::COrientalMotor(std::string device_name, unsigned int baudrate, char parity, unsigned short data_bit, unsigned short stop_bit, unsigned short id):
                               m_ID(id)
 {
   m_ctx = modbus_new_rtu(device_name.c_str(), baudrate, parity, data_bit, stop_bit);
   if (m_ctx == NULL)
   {
     std::cout << "Failed to create modbus context" << std::endl;
+    std::cout << "Device: " << device_name << ", Baudrate:" << baudrate << ", Parity:" << parity 
+              << ", Data Bit Size: " << data_bit << ", Stop Bit Size: " << stop_bit << std::endl; 
     return;
   }
 
@@ -19,10 +21,14 @@ COrientalMotor::COrientalMotor(std::string device_name, uint16_t baudrate, char 
     modbus_free(m_ctx);
     return;
   }
+
+  m_valid = true;
 }
 
 int COrientalMotor::move_absolute_position()
 {
+  
+
   return 0;
 }
 
