@@ -25,9 +25,16 @@ COrientalMotor::COrientalMotor(std::string device_name, unsigned int baudrate, c
   m_valid = true;
 }
 
-int COrientalMotor::move_absolute_position()
+int COrientalMotor::move_absolute_position(double data)
 {
+  int result = 0;
+  result = modbus_write_register(m_ctx, OPERATE_CMD_ADDR, 0);
+  uint16_t buffer[2];
+  buffer[0] = (uint16_t) (data * 100) >> 16;
+  buffer[1] = (uint16_t) (data * 100) | 0xffffffff;
   
+  result = modbus_write_registers(m_ctx, GOAL_POSITION_UPPER, 2, buffer);
+  result = modbus_write_register(m_ctx, OPERATE_CMD_ADDR, OPERATE_CMD(OPERATE_CMD_START));
 
   return 0;
 }
