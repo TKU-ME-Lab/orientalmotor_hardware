@@ -70,7 +70,7 @@ public:
   COrientalMotor(std::string, unsigned int, char, unsigned short, unsigned short, unsigned short id);
   ~COrientalMotor();
 
-  int move_absolute_position(float);
+  int move_absolute_position(float, float);
   int move_relative_position();
 
   void write();

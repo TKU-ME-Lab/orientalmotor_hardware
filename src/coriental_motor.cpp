@@ -30,12 +30,12 @@ COrientalMotor::~COrientalMotor()
   
 }
 
-int COrientalMotor::move_absolute_position(float data)
+int COrientalMotor::move_absolute_position(float position_data, float velocity_data)
 {
   int result = 0;
   result = modbus_write_register(m_ctx, OPERATE_CMD_ADDR, 0);
 
-  uint32_t data_int = (data * 100);
+  uint32_t data_int = (position_data * 100);
   uint16_t buffer[2];
   buffer[0] = data_int >> 16;
   buffer[1] = data_int & 0xffff;
@@ -78,19 +78,20 @@ void COrientalMotor::read()
     return;
   }
 
-  m_present_position = (double) ((buffer[0] << 16) | buffer[1]) /100;
+  m_present_position = (float) ((buffer[0] << 16) | buffer[1]) /100;
 
   #ifdef _DEBUG
-    std::cout << "Position: " << buffer[0] << " [Upper], " << buffer[1] << " [Lower] (DEC)" << std::endl;
-    std::cout << "          " << std::hex << buffer[0] << " [Upper], " << std::hex << buffer[1] << " [Lower] (HEX)" << std::endl;
+    //std::cout << "Position: " << buffer[0] << " [Upper], " << buffer[1] << " [Lower] (DEC)" << std::endl;
+    //std::cout << "          " << std::hex << buffer[0] << " [Upper], " << std::hex << buffer[1] << " [Lower] (HEX)" << std::endl;
   #endif
 
   modbus_read_registers(m_ctx, PRESENT_VELOCITY_UPPER, 2, buffer);
-  m_present_velocity = (double) ((buffer[0] << 16) | buffer[1]) /100;
+  m_present_velocity = (float) ((buffer[0] << 16) | buffer[1]) / 12;
 
   #ifdef _DEBUG
     std::cout << "Velocity: " << buffer[0] << " [Upper], " << buffer[1] << " [Lower] (DEC)" << std::endl;
     std::cout << "          " << std::hex << buffer[0] << " [Upper], " << std::hex << buffer[1] << " [Lower] (HEX)" << std::endl;
+    std::cout << "          " << m_present_velocity <<  "  (mm/s)" << std::endl;
   #endif
 }
 
