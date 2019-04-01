@@ -6,8 +6,6 @@
 #include "coriental_motor.h"
 
 
-
-
 class COrientalHardware: public hardware_interface::RobotHW
 {
   typedef std::map<std::string, modbus_t*> OrientalMotorMap;

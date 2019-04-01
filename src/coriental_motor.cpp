@@ -25,15 +25,26 @@ COrientalMotor::COrientalMotor(std::string device_name, unsigned int baudrate, c
   m_valid = true;
 }
 
-int COrientalMotor::move_absolute_position(double data)
+COrientalMotor::~COrientalMotor()
+{
+  
+}
+
+int COrientalMotor::move_absolute_position(float data)
 {
   int result = 0;
   result = modbus_write_register(m_ctx, OPERATE_CMD_ADDR, 0);
+
+  uint32_t data_int = (data * 100);
   uint16_t buffer[2];
-  buffer[0] = (uint16_t) (data * 100) >> 16;
-  buffer[1] = (uint16_t) (data * 100) | 0xffffffff;
+  buffer[0] = data_int >> 16;
+  buffer[1] = data_int & 0xffff;
   
-  result = modbus_write_registers(m_ctx, GOAL_POSITION_UPPER, 2, buffer);
+  result = modbus_write_register( m_ctx, RUNNING_DATA_NO_0_ADDRESS  , 0);
+  result = modbus_write_register( m_ctx, RUNNING_DATA_NO_0_ADDRESS+1, 1); 
+  result = modbus_write_registers(m_ctx, RUNNING_DATA_NO_0_ADDRESS+2, 2, buffer);
+
+
   result = modbus_write_register(m_ctx, OPERATE_CMD_ADDR, OPERATE_CMD(OPERATE_CMD_START));
 
   return 0;
@@ -46,6 +57,11 @@ int COrientalMotor::move_relative_position()
 
 void COrientalMotor::write()
 {
+  if (m_mode == OperateMode::Absolute)
+  {
+    
+  }
+
   return;
 }
 
@@ -78,22 +94,22 @@ void COrientalMotor::read()
   #endif
 }
 
-double* COrientalMotor::GetGoalPositionPtr()
+float* COrientalMotor::GetGoalPositionPtr()
 {
   return &m_goal_position;  
 }
 
-double* COrientalMotor::GetGoalVelocityPtr()
+float* COrientalMotor::GetGoalVelocityPtr()
 {
   return &m_goal_velcotiy;
 }
 
-double* COrientalMotor::GetPresentPositionPtr()
+float* COrientalMotor::GetPresentPositionPtr()
 {
   return &m_present_position;
 }
 
-double* COrientalMotor::GetPresentVelocityPtr()
+float* COrientalMotor::GetPresentVelocityPtr()
 {
   return &m_present_velocity;
 }

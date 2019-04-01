@@ -53,14 +53,14 @@ private:
   modbus_t* m_ctx;
   uint8_t   m_ID;
 
-  double m_goal_position;
-  double m_goal_velcotiy;
+  float m_goal_position;
+  float m_goal_velcotiy;
   
-  double m_present_position;
-  double m_present_velocity;
+  float m_present_position;
+  float m_present_velocity;
 
-  double m_start_acceleration;
-  double m_stop_acceleration;
+  float m_start_acceleration;
+  float m_stop_acceleration;
 
   OperateMode m_mode;
 
@@ -68,19 +68,19 @@ private:
   
 public:
   COrientalMotor(std::string, unsigned int, char, unsigned short, unsigned short, unsigned short id);
-  //int set_goal_velocity()
+  ~COrientalMotor();
 
-  int move_absolute_position(double);
+  int move_absolute_position(float);
   int move_relative_position();
 
   void write();
   void read();
 
-  void SetGoalPosition(double);
+  void SetGoalPosition(float);
 
-  double* GetGoalPositionPtr();
-  double* GetGoalVelocityPtr();
-  double* GetPresentPositionPtr();
-  double* GetPresentVelocityPtr();
+  float* GetGoalPositionPtr();
+  float* GetGoalVelocityPtr();
+  float* GetPresentPositionPtr();
+  float* GetPresentVelocityPtr();
   
 };
