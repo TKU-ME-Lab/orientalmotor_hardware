@@ -1,6 +1,12 @@
 oriental_motor_actuator:
-  port: '/dev/'
+  port: '/dev/U2D_AL01QGU9'
   baud_rate: 115200
   parity: 'E'
   data_bit: 8
   stop_bit: 1
+  id: 1
+
+  max_position:  0.0
+  min_position: -0.7
+
+  max_velocity: 0.05

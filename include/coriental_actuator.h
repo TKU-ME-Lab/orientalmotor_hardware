@@ -2,8 +2,6 @@
 #include <modbus/modbus.h>
 #include <modbus/modbus-rtu.h>
 
-#define _DEBUG 1
-
 #define OPERATE_CMD(bit) (1 << bit)
 
 const uint16_t OPERATE_CMD_M0         =  0;
@@ -22,7 +20,6 @@ const uint16_t OPERATE_CMD_FW_JOG_P   = 12;
 const uint16_t OPERATE_CMD_RV_JOG_P   = 13;
 const uint16_t OPERATE_CMD_FW_POS     = 14;
 const uint16_t OPERATE_CMD_RV_POS     = 15;
-
 
 //Registers Address
 const uint16_t OPERATE_CMD_ADDR    = 125;
@@ -49,7 +46,17 @@ typedef enum
   Absolute = 1, Relative
 }OperateMode;
 
-class COrientalMotor
+typedef struct{
+  unsigned short id;
+  std::string port_name;
+  int  baud_rate;
+  char parity;
+  unsigned short data_bit;
+  unsigned short stop_bit;
+  float profile_velocity;
+}OrientalParammeter;
+
+class COrientalActuator
 {
 private:
   modbus_t* m_ctx;
@@ -61,24 +68,14 @@ private:
   float m_present_position;
   float m_present_velocity;
 
-  float m_start_acceleration;
-  float m_stop_acceleration;
-
-  OperateMode m_mode;
-
   bool m_valid;
   
 public:
-  COrientalMotor(std::string, unsigned int, char, unsigned short, unsigned short, unsigned short id);
-  ~COrientalMotor();
-
-  int move_absolute_position(float, float);
-  int move_relative_position();
+  COrientalActuator(OrientalParammeter);
+  ~COrientalActuator();
 
   void write();
   void read();
-
-  void SetGoalPosition(float);
 
   float* GetGoalPositionPtr();
   float* GetGoalVelocityPtr();

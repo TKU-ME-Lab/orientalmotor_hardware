@@ -3,8 +3,7 @@
 #include <hardware_interface/actuator_state_interface.h>
 #include <hardware_interface/robot_hw.h>
 
-#include "coriental_motor.h"
-
+#include "coriental_actuator.h"
 
 class COrientalHardware: public hardware_interface::RobotHW
 {
@@ -21,7 +20,7 @@ private:
   
 
 public:
-  COrientalHardware(ros::NodeHandle&, ros::NodeHandle);
+  COrientalHardware(ros::NodeHandle&, ros::NodeHandle&, std::vector<std::string>);
 
 
   bool init();
