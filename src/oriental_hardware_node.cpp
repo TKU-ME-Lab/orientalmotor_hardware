@@ -2,11 +2,10 @@
 #include <std_msgs/Float32.h>
 #include <std_msgs/Bool.h>
 #include <iostream>
-#define _DEBUG 1
 #include "coriental_motor.h"
 
 float position_data = 0;
-float velocity_data = 10.0;
+float velocity_data = 5.0;
 bool start = false;
 
 
@@ -39,7 +38,7 @@ int main(int argc, char **argv)
   ros::Subscriber subscriber_velocity_cmd = nh.subscribe("/velocity_command", 10, velocity_data_callback);
   ros::Subscriber subscriber_start = nh.subscribe("/start", 10, start_callback);
 
-  ros::Rate rate(1);
+  ros::Rate rate(10);
 
   while(ros::ok())
   {

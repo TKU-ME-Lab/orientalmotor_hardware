@@ -2,6 +2,8 @@
 #include <modbus/modbus.h>
 #include <modbus/modbus-rtu.h>
 
+#define _DEBUG 1
+
 #define OPERATE_CMD(bit) (1 << bit)
 
 const uint16_t OPERATE_CMD_M0         =  0;
