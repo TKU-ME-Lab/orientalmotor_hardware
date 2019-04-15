@@ -53,7 +53,7 @@ typedef struct{
   char parity;
   unsigned short data_bit;
   unsigned short stop_bit;
-  float profile_velocity;
+  double profile_velocity;
 }OrientalParammeter;
 
 class COrientalActuator
@@ -62,11 +62,12 @@ private:
   modbus_t* m_ctx;
   uint8_t   m_ID;
 
-  float m_goal_position;
-  float m_goal_velcotiy;
+  double m_goal_position;
+  double m_goal_velcotiy;
   
-  float m_present_position;
-  float m_present_velocity;
+  double m_present_position;
+  double m_present_velocity;
+  double m_present_current;
 
   bool m_valid;
   
@@ -77,9 +78,12 @@ public:
   void write();
   void read();
 
-  float* GetGoalPositionPtr();
-  float* GetGoalVelocityPtr();
-  float* GetPresentPositionPtr();
-  float* GetPresentVelocityPtr();
+  bool isValid();
+
+  double* GetGoalPositionPtr();
+  double* GetGoalVelocityPtr();
+  double* GetPresentPositionPtr();
+  double* GetPresentVelocityPtr();
+  double* GetPresentCurrentPtr();
   
 };

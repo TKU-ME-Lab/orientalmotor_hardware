@@ -2,7 +2,7 @@
 #include <iostream>
 
 COrientalActuator::COrientalActuator(OrientalParammeter param):
-                              m_ID(param.id), m_goal_velcotiy(param.profile_velocity)
+                              m_ID(param.id), m_goal_velcotiy(param.profile_velocity), m_valid(false)
 {
   m_ctx = modbus_new_rtu(param.port_name.c_str(), param.baud_rate, param.parity, param.data_bit, param.stop_bit);
   if (m_ctx == NULL)
@@ -69,7 +69,7 @@ void COrientalActuator::read()
     return;
   }
 
-  m_present_position = (float) ((buffer[0] << 16) | buffer[1]) /200000; //[m]
+  m_present_position = (double) ((buffer[0] << 16) | buffer[1]) /200000; //[m]
 
   #ifdef _DEBUG
     // std::cout << "Position: " << buffer[0] << " [Upper], " << buffer[1] << " [Lower] (DEC)" << std::endl;
@@ -78,7 +78,7 @@ void COrientalActuator::read()
   #endif
 
   modbus_read_registers(m_ctx, PRESENT_VELOCITY_UPPER, 2, buffer);
-  m_present_velocity = (float) ((buffer[0] << 16) | buffer[1]) / 12000; //[m/s]
+  m_present_velocity = (double) ((buffer[0] << 16) | buffer[1]) / 12000; //[m/s]
 
   #ifdef _DEBUG
     // std::cout << "Velocity: " << buffer[0] << " [Upper], " << buffer[1] << " [Lower] (DEC)" << std::endl;
@@ -87,22 +87,33 @@ void COrientalActuator::read()
   #endif
 }
 
-float* COrientalActuator::GetGoalPositionPtr()
+bool COrientalActuator::isValid()
+{
+  return m_valid;
+}
+
+double* COrientalActuator::GetGoalPositionPtr()
 {
   return &m_goal_position;  
 }
 
-float* COrientalActuator::GetGoalVelocityPtr()
+double* COrientalActuator::GetGoalVelocityPtr()
 {
   return &m_goal_velcotiy;
 }
 
-float* COrientalActuator::GetPresentPositionPtr()
+double* COrientalActuator::GetPresentPositionPtr()
 {
   return &m_present_position;
 }
 
-float* COrientalActuator::GetPresentVelocityPtr()
+double* COrientalActuator::GetPresentVelocityPtr()
 {
   return &m_present_velocity;
+}
+
+
+double* COrientalActuator::GetPresentCurrentPtr()
+{
+  return &m_present_current;
 }

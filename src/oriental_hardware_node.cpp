@@ -1,54 +1,44 @@
 #include <ros/ros.h>
-#include <std_msgs/Float32.h>
-#include <std_msgs/Bool.h>
-#include <iostream>
-#include "coriental_actuator.h"
+#include <ros/spinner.h>
+#include <controller_manager/controller_manager.h>
+#include <vector>
 
-float position_data = 0;
-float velocity_data = 5.0;
-bool start = false;
-
-
-void position_data_callback(const std_msgs::Float32ConstPtr &msg)
-{
-  ROS_INFO("Received [%f]" , msg->data);
-  position_data = msg->data;
-}
-
-void velocity_data_callback(const std_msgs::Float32ConstPtr &msg)
-{
-  ROS_INFO("Received [%f]" , msg->data);
-  velocity_data = msg->data;
-}
-
-void start_callback(const std_msgs::BoolConstPtr &msg)
-{
-  ROS_INFO("Get Start Signal");
-  start = msg->data;
-}
+#include <coriental_hardware.h>
 
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "oriental_hardware_node");
   ros::NodeHandle nh;
+  ros::NodeHandle pnh("~");
 
-  COrientalActuator motor("/dev/U2D_AL01QGU9", 115200, 'E', 8, 1, 1);
+  //COrientalActuator motor("/dev/U2D_AL01QGU9", 115200, 'E', 8, 1, 1);
+  std::vector<std::string> actuator_names;
+  for (int i = 0; i < argc-1; ++i){
+      actuator_names.push_back(argv[i+1]);
+  }
 
-  ros::Subscriber subscriber_position_cmd = nh.subscribe("/position_command", 10, position_data_callback);
-  ros::Subscriber subscriber_velocity_cmd = nh.subscribe("/velocity_command", 10, velocity_data_callback);
-  ros::Subscriber subscriber_start = nh.subscribe("/start", 10, start_callback);
+  COrientalHardware robot(nh, pnh, actuator_names);
+  controller_manager::ControllerManager CM(&robot, nh); 
+
+  ros::AsyncSpinner spinner(1);
+  spinner.start();
+
+  if (!robot.init())
+  {
+    ROS_FATAL("Failed to initializer actuators");
+    return 0;
+  }
 
   ros::Rate rate(10);
+  ros::Time last = ros::Time::now();
 
   while(ros::ok())
   {
-    motor.read();
-    if (start)
-    {
-      
-      start = false;
-    }
-    ros::spinOnce();
+    robot.read();
+    ros::Time now = ros::Time::now();
+    CM.update(now, now-last);
+    robot.write();
+    last = now;
     rate.sleep();
   }
 

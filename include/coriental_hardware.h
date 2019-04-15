@@ -7,7 +7,7 @@
 
 class COrientalHardware: public hardware_interface::RobotHW
 {
-  typedef std::map<std::string, modbus_t*> OrientalMotorMap;
+  typedef std::map<std::string, COrientalActuator*> OrientalMotorMap;
 
 private:
   ros::NodeHandle m_nh;
@@ -17,16 +17,12 @@ private:
 
   hardware_interface::ActuatorStateInterface m_asi;
   hardware_interface::PositionActuatorInterface m_api;
-  
 
 public:
   COrientalHardware(ros::NodeHandle&, ros::NodeHandle&, std::vector<std::string>);
-
 
   bool init();
 
   void read();
   void write();
-
-
 };
