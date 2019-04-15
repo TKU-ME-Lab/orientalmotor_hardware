@@ -77,14 +77,18 @@ COrientalHardware::COrientalHardware(ros::NodeHandle& nh, ros::NodeHandle& priva
 
   for (OrientalMotorMap::iterator iter = m_OrientalMotorMap.begin(); iter != m_OrientalMotorMap.end(); iter++)
   {
-    hardware_interface::ActuatorStateHandle state_handle(iter->first, iter->second->GetGoalPositionPtr(), iter->second->GetGoalVelocityPtr(), iter->second->GetPresentCurrentPtr());
-    hardware_interface::ActuatorHandle handle(state_handle, iter->second->GetGoalPositionPtr());
-    m_asi.registerHandle(state_handle);
-    m_api.registerHandle(handle);
+    hardware_interface::JointStateHandle state_handle(iter->first, iter->second->GetPresentPositionPtr(), iter->second->GetPresentVelocityPtr(), iter->second->GetPresentCurrentPtr());
+    m_jsi.registerHandle(state_handle);
+    ROS_INFO_STREAM("Create JointStateHandle, Name: " + state_handle.getName());
+    hardware_interface::JointHandle joint_handle(state_handle, iter->second->GetGoalPositionPtr());
+    ROS_INFO_STREAM("Create JointStateHandle, Name: " + joint_handle.getName());
+    m_jpi.registerHandle(joint_handle);
   }
 
-  registerInterface(&m_asi);
-  registerInterface(&m_api);
+  registerInterface(&m_jsi);
+  registerInterface(&m_jpi);
+
+  
 }
 
 bool COrientalHardware::init()
@@ -97,6 +101,8 @@ bool COrientalHardware::init()
       return false;
     }
   }
+
+  return true;
 }
 
 void COrientalHardware::read()

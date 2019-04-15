@@ -31,8 +31,7 @@ COrientalActuator::~COrientalActuator()
 }
 
 void COrientalActuator::write()
-{
-  
+{ 
   int result = 0;
   result = modbus_write_register(m_ctx, OPERATE_CMD_ADDR, 0);
 
@@ -46,10 +45,10 @@ void COrientalActuator::write()
   result = modbus_write_register( m_ctx, RUNNING_DATA_NO_0_ADDRESS+1, 1); 
   result = modbus_write_registers(m_ctx, RUNNING_DATA_NO_0_ADDRESS+2, 2, buffer);
 
-  data_int = (m_goal_velcotiy * 200);
-  buffer[0] = data_int >> 16;
-  buffer[1] = data_int & 0xffff;
-  result = modbus_write_registers(m_ctx, RUNNING_DATA_NO_0_ADDRESS+4, 2, buffer);
+  // data_int = (m_goal_velcotiy * 200);
+  // buffer[0] = data_int >> 16;
+  // buffer[1] = data_int & 0xffff;
+  // result = modbus_write_registers(m_ctx, RUNNING_DATA_NO_0_ADDRESS+4, 2, buffer);
 
   result = modbus_write_register(m_ctx, OPERATE_CMD_ADDR, OPERATE_CMD(OPERATE_CMD_START));
 

@@ -1,6 +1,6 @@
 #include <ros/ros.h>
-#include <hardware_interface/actuator_command_interface.h>
-#include <hardware_interface/actuator_state_interface.h>
+#include <hardware_interface/joint_command_interface.h>
+#include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/robot_hw.h>
 
 #include "coriental_actuator.h"
@@ -15,8 +15,8 @@ private:
 
   OrientalMotorMap m_OrientalMotorMap;
 
-  hardware_interface::ActuatorStateInterface m_asi;
-  hardware_interface::PositionActuatorInterface m_api;
+  hardware_interface::JointStateInterface m_jsi;
+  hardware_interface::PositionJointInterface m_jpi;
 
 public:
   COrientalHardware(ros::NodeHandle&, ros::NodeHandle&, std::vector<std::string>);
