@@ -9,6 +9,8 @@ add_compile_options(-std=c++11)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  hardware_interface
+  controller_manager
 )
 
 ## System dependencies are found with CMake's conventions
@@ -119,8 +121,12 @@ include_directories(
 )
 
 ## Declare a C++ library
-add_library(corientalmotor
-    src/coriental_motor.cpp
+add_library(corientalactuator
+    src/coriental_actuator.cpp
+)
+
+add_library(corientalhardware
+    src/coriental_hardware.cpp
 )
 
 ## Add cmake target dependencies of the library
@@ -144,13 +150,18 @@ add_executable(oriental_hardware_node src/oriental_hardware_node.cpp)
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(corientalmotor
+target_link_libraries(corientalactuator
   ${catkin_LIBRARIES}
   modbus
 )
 
+target_link_libraries(corientalhardware
+  ${catkin_LIBRARIES}
+  corientalactuator
+)
+
 target_link_libraries(oriental_hardware_node
-  corientalmotor
+  corientalhardware
   ${catkin_LIBRARIES}
 )
 
