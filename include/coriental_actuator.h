@@ -23,6 +23,7 @@ const uint16_t OPERATE_CMD_RV_POS     = 15;
 
 //Registers Address
 const uint16_t OPERATE_CMD_ADDR    = 125;
+const uint16_t OPERATE_STATUS_ADDR = 127;
 
 const uint16_t GOAL_POSITION_UPPER = 198;
 const uint16_t GOAL_POSITION_LOWER = 199;
@@ -40,6 +41,7 @@ const uint16_t RUNNING_DATA_COUNT            = 256;
 
 const uint16_t DEFAULT_CURRENT_UPPER = 588;
 const uint16_t DEFAULT_CURRENT_LOWER = 589;
+//Registers Address
 
 typedef enum
 {
@@ -61,6 +63,8 @@ class COrientalActuator
 private:
   modbus_t* m_ctx;
   uint8_t   m_ID;
+
+  uint16_t m_operate_status;
 
   double m_goal_position;
   double m_goal_velcotiy;

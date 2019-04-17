@@ -35,7 +35,6 @@ void COrientalActuator::write()
   int result = 0;
   result = modbus_write_register(m_ctx, OPERATE_CMD_ADDR, 0);
 
-
   uint32_t data_int = (m_goal_position * 200);
   uint16_t buffer[2];  
   buffer[0] = data_int >> 16;
@@ -84,6 +83,10 @@ void COrientalActuator::read()
     // std::cout << "          " << std::hex << buffer[0] << " [Upper], " << std::hex << buffer[1] << " [Lower] (HEX)" << std::endl;
     std::cout << "          " << m_present_velocity <<  "  (m/s)" << std::endl;
   #endif
+
+  modbus_read_registers(m_ctx, OPERATE_STATUS_ADDR, 1, &m_operate_status);
+  std::cout << "Status: " << m_operate_status << std::endl;
+  std::cout << "        " << std::hex << m_operate_status << std::endl;
 }
 
 bool COrientalActuator::isValid()
