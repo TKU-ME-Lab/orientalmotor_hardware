@@ -5,6 +5,7 @@
 #include <transmission_interface/robot_transmissions.h>
 #include <transmission_interface/transmission_interface_loader.h>
 #include <boost/scoped_ptr.hpp>
+#include <std_srvs/SetBool.h>
 
 #include "coriental_actuator.h"
 
@@ -16,6 +17,8 @@ private:
   ros::NodeHandle m_nh;
   ros::NodeHandle m_private_nh;
 
+  ros::ServiceServer m_ServiceServer_autohome;
+
   OrientalMotorMap m_OrientalMotorMap;
 
   hardware_interface::ActuatorStateInterface m_asi;
@@ -24,6 +27,7 @@ private:
   transmission_interface::RobotTransmissions m_robot_transmissions;
   boost::scoped_ptr<transmission_interface::TransmissionInterfaceLoader> m_transmission_loader;
 
+  bool autohomeCallback(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res);
 
 public:
   COrientalHardware(ros::NodeHandle&, ros::NodeHandle&, std::vector<std::string>);

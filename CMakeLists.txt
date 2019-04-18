@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   hardware_interface
   controller_manager
   transmission_interface
+  std_srvs
 )
 
 ## System dependencies are found with CMake's conventions

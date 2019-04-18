@@ -155,6 +155,17 @@ COrientalHardware::COrientalHardware(ros::NodeHandle& nh, ros::NodeHandle& priva
     }
   }
 
+  m_ServiceServer_autohome = m_nh.advertiseService("auto_home", &COrientalHardware::autohomeCallback, this);
+
+}
+
+bool COrientalHardware::autohomeCallback(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res)
+{
+
+
+  res.success = true;
+  res.message = "start auto home";
+  return true;
 }
 
 bool COrientalHardware::init()

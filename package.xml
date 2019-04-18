@@ -56,6 +56,7 @@
   <depend>hardware_interface</depend>
   <depend>controller_manager</depend>
   <depend>transmission_interface</depend>
+  <depend>std_srvs</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
