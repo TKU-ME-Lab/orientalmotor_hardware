@@ -161,10 +161,18 @@ COrientalHardware::COrientalHardware(ros::NodeHandle& nh, ros::NodeHandle& priva
 
 bool COrientalHardware::autohomeCallback(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res)
 {
-
+  for (OrientalMotorMap::iterator iter = m_OrientalMotorMap.begin(); iter != m_OrientalMotorMap.end(); iter++)
+  {
+    if (!iter->second->auto_home())
+    {
+      res.success = false;
+      res.message = iter->first + " failed auto home";
+      return false;
+    }
+  }
 
   res.success = true;
-  res.message = "start auto home";
+  res.message = "All Auto home";
   return true;
 }
 

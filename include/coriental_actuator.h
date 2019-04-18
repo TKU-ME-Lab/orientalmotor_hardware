@@ -2,24 +2,42 @@
 #include <modbus/modbus.h>
 #include <modbus/modbus-rtu.h>
 
-#define OPERATE_CMD(bit) (1 << bit)
+#define OPERATE(bit) (1 << bit)
 
-const uint16_t OPERATE_CMD_M0         =  0;
-const uint16_t OPERATE_CMD_M1         =  1;
-const uint16_t OPERATE_CMD_M2         =  2;
-const uint16_t OPERATE_CMD_START      =  3;
-const uint16_t OPERATE_CMD_ZHOME      =  4;
-const uint16_t OPERATE_CMD_STOP       =  5;
-const uint16_t OPERATE_CMD_FREE       =  6;
-const uint16_t OPERATE_CMD_ALM_RST    =  7;
-const uint16_t OPERATE_CMD_D_SEL0     =  8;
-const uint16_t OPERATE_CMD_D_SEL1     =  9;
-const uint16_t OPERATE_CMD_D_SEL2     = 10;
-const uint16_t OPERATE_CMD_SSTART     = 11;
-const uint16_t OPERATE_CMD_FW_JOG_P   = 12;
-const uint16_t OPERATE_CMD_RV_JOG_P   = 13;
-const uint16_t OPERATE_CMD_FW_POS     = 14;
-const uint16_t OPERATE_CMD_RV_POS     = 15;
+//
+const uint16_t INPUT_CMD_M0         =  0;
+const uint16_t INPUT_CMD_M1         =  1;
+const uint16_t INPUT_CMD_M2         =  2;
+const uint16_t INPUT_CMD_START      =  3;
+const uint16_t INPUT_CMD_ZHOME      =  4;
+const uint16_t INPUT_CMD_STOP       =  5;
+const uint16_t INPUT_CMD_FREE       =  6;
+const uint16_t INPUT_CMD_ALM_RST    =  7;
+const uint16_t INPUT_CMD_D_SEL0     =  8;
+const uint16_t INPUT_CMD_D_SEL1     =  9;
+const uint16_t INPUT_CMD_D_SEL2     = 10;
+const uint16_t INPUT_CMD_SSTART     = 11;
+const uint16_t INPUT_CMD_FW_JOG_P   = 12;
+const uint16_t INPUT_CMD_RV_JOG_P   = 13;
+const uint16_t INPUT_CMD_FW_POS     = 14;
+const uint16_t INPUT_CMD_RV_POS     = 15;
+
+const uint16_t OUTPUT_STATUS_M0_R     =  0;
+const uint16_t OUTPUT_STATUS_M1_R     =  1;
+const uint16_t OUTPUT_STATUS_M2_R     =  2;
+const uint16_t OUTPUT_STATUS_START    =  3;
+const uint16_t OUTPUT_STATUS_HOME_END =  4;
+const uint16_t OUTPUT_STATUS_READY    =  5;
+const uint16_t OUTPUT_STATUS_INFO     =  6;
+const uint16_t OUTPUT_STATUS_ALM_A    =  7;
+const uint16_t OUTPUT_STATUS_SYS_BSY  =  8;
+const uint16_t OUTPUT_STATUS_AREA0    =  9;
+const uint16_t OUTPUT_STATUS_AREA1    = 10;
+const uint16_t OUTPUT_STATUS_AREA2    = 11;
+const uint16_t OUTPUT_STATUS_TIM      = 12;
+const uint16_t OUTPUT_STATUS_MOVE     = 13;
+const uint16_t OUTPUT_STATUS_IN_POS   = 14;
+const uint16_t OUTPUT_STATUS_TLC      = 15;
 
 //Registers Address
 const uint16_t OPERATE_CMD_ADDR    = 125;
@@ -74,6 +92,7 @@ private:
   double m_present_current;
 
   bool m_valid;
+  bool m_inited_home;
   
 public:
   COrientalActuator(OrientalParammeter);
@@ -83,6 +102,8 @@ public:
   void read();
 
   bool isValid();
+
+  bool auto_home();
 
   double* GetGoalPositionPtr();
   double* GetGoalVelocityPtr();
