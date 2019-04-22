@@ -92,9 +92,9 @@ COrientalHardware::COrientalHardware(ros::NodeHandle& nh, ros::NodeHandle& priva
     hardware_interface::ActuatorStateHandle state_handle(iter->first, iter->second->GetPresentPositionPtr(), iter->second->GetPresentVelocityPtr(), iter->second->GetPresentCurrentPtr());
     m_asi.registerHandle(state_handle);
     ROS_INFO_STREAM("Create JointStateHandle, Name: " + state_handle.getName());
-    hardware_interface::ActuatorHandle joint_handle(state_handle, iter->second->GetGoalPositionPtr());
-    ROS_INFO_STREAM("Create JointStateHandle, Name: " + joint_handle.getName());
-    m_api.registerHandle(joint_handle);
+    hardware_interface::ActuatorHandle actuator_handle(state_handle, iter->second->GetGoalPositionPtr());
+    ROS_INFO_STREAM("Create Actuator Handle, Name: " + actuator_handle.getName());
+    m_api.registerHandle(actuator_handle);
   }
 
   registerInterface(&m_asi);
@@ -207,7 +207,7 @@ void COrientalHardware::write()
   {
     iter->second->write();
   }
-  if (m_robot_transmissions.get<transmission_interface::ActuatorToJointPositionInterface>()){
-    m_robot_transmissions.get<transmission_interface::ActuatorToJointPositionInterface>()->propagate();
+  if (m_robot_transmissions.get<transmission_interface::JointToActuatorPositionInterface>()){
+    m_robot_transmissions.get<transmission_interface::JointToActuatorPositionInterface>()->propagate();
   }
 }

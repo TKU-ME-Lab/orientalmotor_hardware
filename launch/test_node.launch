@@ -10,9 +10,9 @@
     
     <node name = "robot_state_publisher" pkg = "robot_state_publisher" type = "state_publisher"/>
 
-    <!-- <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
 	    output="screen" args="oriental_position_controller
-                              oriental_state_controller"/> -->
+                              oriental_state_controller"/>
 
 
 </launch>
