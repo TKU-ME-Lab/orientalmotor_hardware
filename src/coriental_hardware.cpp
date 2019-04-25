@@ -155,11 +155,12 @@ COrientalHardware::COrientalHardware(ros::NodeHandle& nh, ros::NodeHandle& priva
     }
   }
 
-  m_ServiceServer_autohome = m_nh.advertiseService("auto_home", &COrientalHardware::autohomeCallback, this);
+  m_ServiceServer_Autohome = m_nh.advertiseService(ros::this_node::getNamespace() + "Auto_home", &COrientalHardware::AutohomeCallback, this);
+  m_ServiceServer_SetProfileVelocity = m_nh.advertiseService(ros::this_node::getNamespace() + "SetProfileVelocity", &COrientalHardware::SetProfileVelocityCallback, this);
 
 }
 
-bool COrientalHardware::autohomeCallback(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res)
+bool COrientalHardware::AutohomeCallback(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res)
 {
   for (OrientalMotorMap::iterator iter = m_OrientalMotorMap.begin(); iter != m_OrientalMotorMap.end(); iter++)
   {
@@ -173,6 +174,22 @@ bool COrientalHardware::autohomeCallback(std_srvs::SetBool::Request &req, std_sr
 
   res.success = true;
   res.message = "All Auto home";
+  return true;
+}
+
+bool COrientalHardware::SetProfileVelocityCallback(orientalmotor_hardware_msgs::SetProfileVelocityService::Request & req, orientalmotor_hardware_msgs::SetProfileVelocityService::Response &res)
+{
+  for (OrientalMotorMap::iterator iter = m_OrientalMotorMap.begin(); iter != m_OrientalMotorMap.end(); iter)
+  {
+    double value = req.velocity;
+    if (!iter->second->SetProfileVelocity(value))
+    {
+      res.result = false;
+      return false;
+    }
+  }
+  
+  res.result = true;
   return true;
 }
 

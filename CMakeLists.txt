@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   controller_manager
   transmission_interface
   std_srvs
+  orientalmotor_hardware_msgs
 )
 
 ## System dependencies are found with CMake's conventions

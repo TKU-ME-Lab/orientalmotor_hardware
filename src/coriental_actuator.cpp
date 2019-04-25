@@ -57,7 +57,7 @@ void COrientalActuator::write()
     result = modbus_write_register( m_ctx, RUNNING_DATA_NO_0_ADDRESS+1, 1); 
     result = modbus_write_registers(m_ctx, RUNNING_DATA_NO_0_ADDRESS+2, 2, buffer);
 
-    // data_int = (m_goal_velcotiy * 200);
+    // data_int = (m_goal_velcotiy * 200000);
     // buffer[0] = data_intisValid >> 16;
     // buffer[1] = data_int & 0xffff;
     // result = modbus_write_registers(m_ctx, RUNNING_DATA_NO_0_ADDRESS+4, 2, buffer);
@@ -95,7 +95,7 @@ void COrientalActuator::read()
   #endif
 
   modbus_read_registers(m_ctx, PRESENT_VELOCITY_UPPER, 2, buffer);
-  m_present_velocity = (double) ((buffer[0] << 16) | buffer[1]) / 12000; //[m/s]
+  m_present_velocity = (double) ((buffer[0] << 16) | buffer[1]) / 120000; //[m/s]
 
   #ifdef _DEBUG
     // std::cout << "Velocity: " << buffer[0] << " [Upper], " << buffer[1] << " [Lower] (DEC)" << std::endl;
@@ -122,7 +122,7 @@ bool COrientalActuator::auto_home()
   result = modbus_write_register( m_ctx, RUNNING_DATA_NO_0_ADDRESS+1, 1); 
   result = modbus_write_registers(m_ctx, RUNNING_DATA_NO_0_ADDRESS+2, 2, buffer);
 
-  // data_int = (m_goal_velcotiy * 200);
+  // data_int = (m_goal_velcotiy * 200000);
   // buffer[0] = data_int >> 16;
   // buffer[1] = data_int & 0xffff;
   // result = modbus_write_registers(m_ctx, RUNNING_DATA_NO_0_ADDRESS+4, 2, buffer);
@@ -134,6 +134,17 @@ bool COrientalActuator::auto_home()
   }
 
   return result;
+}
+
+bool COrientalActuator::SetProfileVelocity(double value)
+{
+  if (value < 0)
+  {
+    return false;
+  }
+
+  m_goal_velcotiy = value;
+  return true;
 }
 
 double* COrientalActuator::GetGoalPositionPtr()

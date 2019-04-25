@@ -57,6 +57,7 @@
   <depend>controller_manager</depend>
   <depend>transmission_interface</depend>
   <depend>std_srvs</depend>
+  <depend>orientalmotor_hardware_msgs</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

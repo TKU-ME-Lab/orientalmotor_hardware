@@ -104,6 +104,7 @@ public:
   bool isValid();
 
   bool auto_home();
+  bool SetProfileVelocity(double);
 
   double* GetGoalPositionPtr();
   double* GetGoalVelocityPtr();
