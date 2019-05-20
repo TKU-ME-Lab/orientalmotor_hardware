@@ -33,6 +33,12 @@ COrientalHardware::COrientalHardware(ros::NodeHandle& nh, ros::NodeHandle& priva
                   return;
                 }
 
+                if (!motor_config.getParam("joint_name", param.joint_name))
+                {
+                  ROS_ERROR("Didn't have 'joint_name' in config");
+                  return;
+                }
+
                 COrientalActuator* Actuator = new COrientalActuator(param);
                 m_OrientalMotorMap[motor_name] = Actuator;
 
@@ -77,7 +83,7 @@ COrientalHardware::COrientalHardware(ros::NodeHandle& nh, ros::NodeHandle& priva
 
   for (OrientalMotorMap::iterator iter = m_OrientalMotorMap.begin(); iter != m_OrientalMotorMap.end(); iter++)
   {
-    hardware_interface::JointStateHandle joint_state_handle(iter->first, iter->second->GetPresentPositionPtr(), iter->second->GetPresentVelocityPtr(), iter->second->GetPresentCurrentPtr());
+    hardware_interface::JointStateHandle joint_state_handle(iter->second->GetJointName(), iter->second->GetPresentPositionPtr(), iter->second->GetPresentVelocityPtr(), iter->second->GetPresentCurrentPtr());
     m_jsi.registerHandle(joint_state_handle);
     ROS_INFO_STREAM("Create JointStateHandle, Name: " + joint_state_handle.getName());
     hardware_interface::JointHandle joint_handle(joint_state_handle, iter->second->GetGoalPositionPtr());

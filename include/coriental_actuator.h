@@ -69,6 +69,7 @@ typedef enum
 typedef struct{
   unsigned short id;
   std::string port_name;
+  std::string joint_name;
   int  baud_rate;
   char parity;
   unsigned short data_bit;
@@ -93,7 +94,8 @@ private:
 
   bool m_valid;
   bool m_inited_home;
-  
+
+  std::string m_joint_name;
 public:
   COrientalActuator(OrientalParammeter);
   ~COrientalActuator();
@@ -112,4 +114,5 @@ public:
   double* GetPresentVelocityPtr();
   double* GetPresentCurrentPtr();
   
+  std::string GetJointName(){return m_joint_name;}
 };
