@@ -1,4 +1,6 @@
 #include <ros/ros.h>
+#include <hardware_interface/joint_command_interface.h>
+#include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/actuator_command_interface.h>
 #include <hardware_interface/actuator_state_interface.h>
 #include <hardware_interface/robot_hw.h>
@@ -23,11 +25,8 @@ private:
 
   OrientalMotorMap m_OrientalMotorMap;
 
-  hardware_interface::ActuatorStateInterface m_asi;
-  hardware_interface::PositionActuatorInterface m_api;
-
-  transmission_interface::RobotTransmissions m_robot_transmissions;
-  boost::scoped_ptr<transmission_interface::TransmissionInterfaceLoader> m_transmission_loader;
+  hardware_interface::JointStateInterface m_jsi;
+  hardware_interface::PositionJointInterface m_pji;
 
   bool AutohomeCallback(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res);
   bool SetProfileVelocityCallback(orientalmotor_hardware_msgs::SetProfileVelocityService::Request &req, orientalmotor_hardware_msgs::SetProfileVelocityService::Response &res);
