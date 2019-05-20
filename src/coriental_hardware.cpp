@@ -155,8 +155,8 @@ COrientalHardware::COrientalHardware(ros::NodeHandle& nh, ros::NodeHandle& priva
     }
   }
 
-  m_ServiceServer_Autohome = m_nh.advertiseService(ros::this_node::getNamespace() + "Auto_home", &COrientalHardware::AutohomeCallback, this);
-  m_ServiceServer_SetProfileVelocity = m_nh.advertiseService(ros::this_node::getNamespace() + "SetProfileVelocity", &COrientalHardware::SetProfileVelocityCallback, this);
+  m_ServiceServer_Autohome = m_nh.advertiseService(ros::this_node::getName() + "/Auto_home", &COrientalHardware::AutohomeCallback, this);
+  m_ServiceServer_SetProfileVelocity = m_nh.advertiseService(ros::this_node::getName() + "/SetProfileVelocity", &COrientalHardware::SetProfileVelocityCallback, this);
 
 }
 

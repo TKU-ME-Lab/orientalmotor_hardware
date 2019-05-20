@@ -2,7 +2,7 @@
 #include <iostream>
 
 COrientalActuator::COrientalActuator(OrientalParammeter param):
-                              m_ID(param.id), m_goal_velcotiy(param.profile_velocity), m_valid(false), m_inited_home(false)
+                              m_ID(param.id), m_goal_velcotiy(param.profile_velocity), m_valid(false), m_inited_home(false), m_present_current(0.0)
 {
   m_ctx = modbus_new_rtu(param.port_name.c_str(), param.baud_rate, param.parity, param.data_bit, param.stop_bit);
   if (m_ctx == NULL)
@@ -21,6 +21,21 @@ COrientalActuator::COrientalActuator(OrientalParammeter param):
     modbus_free(m_ctx);
     return;
   }
+  
+  int result;
+  
+  result = modbus_write_register(m_ctx, OPERATE_CMD_ADDR, OPERATE(INPUT_CMD_ALM_RST));
+  
+  uint16_t buffer[2];
+  buffer[0] = 0;
+  buffer[1] = 0;
+  result = modbus_write_register( m_ctx, RUNNING_DATA_NO_0_ADDRESS  , 0);
+  result = modbus_write_register( m_ctx, RUNNING_DATA_NO_0_ADDRESS+1, 1); 
+  result = modbus_write_registers(m_ctx, RUNNING_DATA_NO_0_ADDRESS+2, 2, buffer);
+  while(!result){
+    result = modbus_write_registers(m_ctx,RUNNING_DATA_NO_0_ADDRESS+2, 2, buffer);
+  }
+  
 
   m_valid = true;
 }
@@ -57,10 +72,10 @@ void COrientalActuator::write()
     result = modbus_write_register( m_ctx, RUNNING_DATA_NO_0_ADDRESS+1, 1); 
     result = modbus_write_registers(m_ctx, RUNNING_DATA_NO_0_ADDRESS+2, 2, buffer);
 
-    // data_int = (m_goal_velcotiy * 200000);
-    // buffer[0] = data_intisValid >> 16;
-    // buffer[1] = data_int & 0xffff;
-    // result = modbus_write_registers(m_ctx, RUNNING_DATA_NO_0_ADDRESS+4, 2, buffer);
+    data_int = (m_goal_velcotiy * 20000);
+    buffer[0] = data_int >> 16;
+    buffer[1] = data_int & 0xffff;
+    result = modbus_write_registers(m_ctx, RUNNING_DATA_NO_0_ADDRESS+4, 2, buffer);
 
     result = modbus_write_register(m_ctx, OPERATE_CMD_ADDR, OPERATE(INPUT_CMD_START));
   }
@@ -95,7 +110,7 @@ void COrientalActuator::read()
   #endif
 
   modbus_read_registers(m_ctx, PRESENT_VELOCITY_UPPER, 2, buffer);
-  m_present_velocity = (double) ((buffer[0] << 16) | buffer[1]) / 120000; //[m/s]
+  m_present_velocity = (double) ((buffer[0] << 16) | buffer[1]) / 12000; //[m/s]
 
   #ifdef _DEBUG
     // std::cout << "Velocity: " << buffer[0] << " [Upper], " << buffer[1] << " [Lower] (DEC)" << std::endl;

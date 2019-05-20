@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     return 0;
   }
 
-  ros::Rate rate(5);
+  ros::Rate rate(1);
   ros::Time last = ros::Time::now();
 
   while(ros::ok())
