@@ -1,4 +1,4 @@
-oriental_motor_actuator:
+ball_screw_joint:
   port: '/dev/U2D_AL01QGU9'
   baud_rate: 115200
   parity: 'E'

@@ -2,17 +2,15 @@
     <rosparam file="$(find orientalmotor_hardware)/config/controller_config.yaml" command="load"/>
 
     <param name="robot_description" textfile="$(find orientalmotor_hardware)/launch/mobilerobot.urdf"/>
-    <node name="oriental_hardware_node" pkg="orientalmotor_hardware" type="oriental_hardware_node" args="oriental_motor_actuator" output="screen">
+    <node name="oriental_hardware_node" pkg="orientalmotor_hardware" type="oriental_hardware_node" args="ball_screw_joint" output="screen">
         <rosparam command="load" file="$(find orientalmotor_hardware)/config/actuator_definition.yaml"/>
     </node>
     
-    <node name ="joint_state_publisher" pkg = "joint_state_publisher" type ="joint_state_publisher"/>
+    <!-- <node name ="joint_state_publisher" pkg = "joint_state_publisher" type ="joint_state_publisher"/> -->
     
-    <node name = "robot_state_publisher" pkg = "robot_state_publisher" type = "state_publisher"/>
+    <!-- <node name = "robot_state_publisher" pkg = "robot_state_publisher" type = "state_publisher"/> -->
 
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
 	    output="screen" args="oriental_position_controller
                               oriental_state_controller"/>
-
-
 </launch>

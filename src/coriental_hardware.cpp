@@ -88,64 +88,8 @@ COrientalHardware::COrientalHardware(ros::NodeHandle& nh, ros::NodeHandle& priva
   registerInterface(&m_jsi);
   registerInterface(&m_pji);
 
-  std::string urdf_string;
-  nh.getParam("robot_description", urdf_string);
-  while (urdf_string.empty() && ros::ok())
-  {
-    ROS_INFO_STREAM_ONCE("Waiting for robot_description");
-    nh.getParam("robot_description", urdf_string);
-    ros::Duration(0.1).sleep();
-  }
-
-  transmission_interface::TransmissionParser parser;
-  std::vector<transmission_interface::TransmissionInfo> infos;
-  if (!parser.parse(urdf_string, infos))
-  {
-    ROS_ERROR("Error paring URDF");
-    return;
-  }
-
-  std::vector<std::string> actuator_names;
-  for (OrientalMotorMap::iterator iter = m_OrientalMotorMap.begin(); iter != m_OrientalMotorMap.end(); iter++)
-  {
-    actuator_names.push_back(iter->first);
-  }
-
-  BOOST_FOREACH(const transmission_interface::TransmissionInfo& info, infos){
-    bool found_some = false;
-    bool found_all = true;
-    BOOST_FOREACH(const transmission_interface::ActuatorInfo& actuator, info.actuators_)
-    {
-      if (std::find(actuator_names.begin(), actuator_names.end(), actuator.name_) != actuator_names.end())
-      {
-        found_some = true;
-      }
-      else{
-        found_all = false;
-      }
-    }
-
-    if (found_all)
-    {
-      if (!m_transmission_loader->load(info))
-      {
-        ROS_ERROR_STREAM("Error loading transmission: " << info.name_);
-        return;
-      }
-      else
-      {
-        ROS_INFO_STREAM("Loaded transmission: " << info.name_);
-      }
-    }
-    else if(found_some)
-    {
-      ROS_ERROR_STREAM("Don't support transmission that contain only some Oriental Actuator: " << info.name_);
-    }
-  }
-
   m_ServiceServer_Autohome = m_nh.advertiseService(ros::this_node::getName() + "/Auto_home", &COrientalHardware::AutohomeCallback, this);
   m_ServiceServer_SetProfileVelocity = m_nh.advertiseService(ros::this_node::getName() + "/SetProfileVelocity", &COrientalHardware::SetProfileVelocityCallback, this);
-
 }
 
 bool COrientalHardware::AutohomeCallback(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res)
