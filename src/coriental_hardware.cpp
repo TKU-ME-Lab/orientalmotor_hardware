@@ -6,18 +6,6 @@ COrientalHardware::COrientalHardware(ros::NodeHandle& nh, ros::NodeHandle& priva
 {
   BOOST_FOREACH(const std::string motor_name, motor_names)
   {
-    try{
-      m_transmission_loader.reset(new transmission_interface::TransmissionInterfaceLoader(this, &m_robot_transmissions));
-    }
-    catch (const std::invalid_argument& ex){
-      ROS_ERROR_STREAM("Failed to create transmission interface loader. " << ex.what());
-      return;
-    }
-    catch(...){
-      ROS_ERROR_STREAM("Failed to create transmission interface loader. ");
-      return;
-    }
-
     ros::NodeHandle motor_config(m_private_nh, motor_name);
     OrientalParammeter param;
 
@@ -89,16 +77,16 @@ COrientalHardware::COrientalHardware(ros::NodeHandle& nh, ros::NodeHandle& priva
 
   for (OrientalMotorMap::iterator iter = m_OrientalMotorMap.begin(); iter != m_OrientalMotorMap.end(); iter++)
   {
-    hardware_interface::ActuatorStateHandle state_handle(iter->first, iter->second->GetPresentPositionPtr(), iter->second->GetPresentVelocityPtr(), iter->second->GetPresentCurrentPtr());
-    m_asi.registerHandle(state_handle);
-    ROS_INFO_STREAM("Create JointStateHandle, Name: " + state_handle.getName());
-    hardware_interface::ActuatorHandle actuator_handle(state_handle, iter->second->GetGoalPositionPtr());
-    ROS_INFO_STREAM("Create Actuator Handle, Name: " + actuator_handle.getName());
-    m_api.registerHandle(actuator_handle);
+    hardware_interface::JointStateHandle joint_state_handle(iter->first, iter->second->GetPresentPositionPtr(), iter->second->GetPresentVelocityPtr(), iter->second->GetPresentCurrentPtr());
+    m_jsi.registerHandle(joint_state_handle);
+    ROS_INFO_STREAM("Create JointStateHandle, Name: " + joint_state_handle.getName());
+    hardware_interface::JointHandle joint_handle(joint_state_handle, iter->second->GetGoalPositionPtr());
+    ROS_INFO_STREAM("Create Actuator Handle, Name: " + joint_handle.getName());
+    m_pji.registerHandle(joint_handle);
   }
 
-  registerInterface(&m_asi);
-  registerInterface(&m_api);
+  registerInterface(&m_jsi);
+  registerInterface(&m_pji);
 
   std::string urdf_string;
   nh.getParam("robot_description", urdf_string);
@@ -213,9 +201,6 @@ void COrientalHardware::read()
   {
     iter->second->read();
   }
-  if (m_robot_transmissions.get<transmission_interface::ActuatorToJointStateInterface>()){
-    m_robot_transmissions.get<transmission_interface::ActuatorToJointStateInterface>()->propagate();
-  }
 }
 
 void COrientalHardware::write()
@@ -223,8 +208,5 @@ void COrientalHardware::write()
   for (OrientalMotorMap::iterator iter = m_OrientalMotorMap.begin(); iter != m_OrientalMotorMap.end(); iter++)
   {
     iter->second->write();
-  }
-  if (m_robot_transmissions.get<transmission_interface::JointToActuatorPositionInterface>()){
-    m_robot_transmissions.get<transmission_interface::JointToActuatorPositionInterface>()->propagate();
   }
 }
