@@ -2,7 +2,8 @@
 #include <iostream>
 
 COrientalActuator::COrientalActuator(OrientalParammeter param):
-                              m_ID(param.id), m_goal_velcotiy(param.profile_velocity), m_valid(false), m_inited_home(false), m_present_current(0.0), m_joint_name(param.joint_name)
+                              m_ID(param.id), m_goal_velcotiy(param.profile_velocity), m_valid(false), m_inited_home(false), m_present_current(0.0), m_joint_name(param.joint_name),
+                              m_goal_position(0.0), m_goal_velcotiy(0.0)
 {
   m_ctx = modbus_new_rtu(param.port_name.c_str(), param.baud_rate, param.parity, param.data_bit, param.stop_bit);
   if (m_ctx == NULL)

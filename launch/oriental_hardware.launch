@@ -1,0 +1,5 @@
+<launch>
+    <node name="oriental_hardware_node" pkg="orientalmotor_hardware" type="oriental_hardware_node" args="oriental_motor_actuator" output="screen">
+        <rosparam command="load" file="$(find orientalmotor_hardware)/config/actuator_definition.yaml"/>
+    </node>
+</launch>

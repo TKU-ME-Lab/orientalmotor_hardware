@@ -1,0 +1,6 @@
+<launch>
+  <rosparam command="load" file="$(find orientalmotor_hardware)/config/controller_config.yaml" />
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" args="oriental_position_controller
+                            oriental_state_controller"/>
+</launch>
